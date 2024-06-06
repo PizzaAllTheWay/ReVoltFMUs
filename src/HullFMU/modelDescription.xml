@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<fmiModelDescription
+    fmiVersion="2.0"
+    modelName="HullFMU"
+    guid="@FMU_UUID@"
+    description="An dynamics FMU model for the hull of the ReVolt vessel, It takes inputs from thrusters and enviroment like wind, water currents and waves, and merges it to produce position of the hull at that exact moment"
+    author="Martynas Smilingis"
+    version="0.1">
+
+    <CoSimulation
+        modelIdentifier="HullFMU"
+        canHandleVariableCommunicationStepSize="true" />
+
+    <UnitDefinitions>
+        <!-- Newton (N) [kg * m * (s**(-2))] -->
+        <Unit name="N">
+            <BaseUnit kg="1" m="1" s="-2"/>
+        </Unit>
+
+        <!-- Meter (m) [m] -->
+        <Unit name="m">
+            <BaseUnit m="1"/>
+        </Unit>
+
+        <!-- Degree (deg) [* (factor of 0.0174533 is convertion rate from deg to rad)] -->
+        <Unit name="deg">
+            <BaseUnit rad="1"/>
+            <DisplayUnit name="deg" factor="0.0174533"/>
+        </Unit>
+
+        <!-- Radians (rad) [rad] -->
+        <Unit name="rad">
+            <BaseUnit rad="1"/>
+        </Unit>
+
+        <!-- Linear Velocity (m/s) [m * (s**(-1))] -->
+        <Unit name="m/s">
+            <BaseUnit m="1" s="-1"/>
+        </Unit>
+
+        <!-- Angular Velocity (rad/s) [rad * (s**(-1))] -->
+        <Unit name="rad/s">
+            <BaseUnit rad="1" s="-1"/>
+        </Unit>
+    </UnitDefinitions>
+
+    <ModelVariables>
+        <!-- 
+            #======================================================================#
+            #==============================# Inputs #==============================#
+            #======================================================================# 
+        -->
+        <ScalarVariable 
+            name="InputThrusterBowForce"   
+            valueReference="0"  
+            causality="input"   
+            variability="continuous"    
+            description="Force thruster applies to the hull of the ship">
+            <Real start="0.0"    unit="N"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputThrusterBowAngle"   
+            valueReference="1"  
+            causality="input"   
+            variability="continuous"    
+            description="Angle of thruster forces effecting the hull of the ship">
+            <Real start="0.0"    unit="deg"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputThrusterPortForce"   
+            valueReference="2"  
+            causality="input"   
+            variability="continuous"    
+            description="Force thruster applies to the hull of the ship">
+            <Real start="0.0"    unit="N"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputThrusterPortAngle"   
+            valueReference="3"  
+            causality="input"   
+            variability="continuous"    
+            description="Angle of thruster forces effecting the hull of the ship">
+            <Real start="0.0"    unit="deg"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputThrusterStarboardForce"   
+            valueReference="4"  
+            causality="input"   
+            variability="continuous"    
+            description="Force thruster applies to the hull of the ship">
+            <Real start="0.0"    unit="N"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputThrusterStarboardAngle"   
+            valueReference="5"  
+            causality="input"   
+            variability="continuous"    
+            description="Angle of thruster forces effecting the hull of the ship">
+            <Real start="0.0"    unit="deg"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputWindSpeed"   
+            valueReference="6"  
+            causality="input"   
+            variability="continuous"    
+            description="Speed of the wind effecting the hull of the ship">
+            <Real start="0.0"    unit="m/s"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputWindAngle"   
+            valueReference="7"  
+            causality="input"   
+            variability="continuous"    
+            description="Angle of the wind effecting the hull of the ship">
+            <Real start="0.0"    unit="deg"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputWaterCurrentSpeed"   
+            valueReference="8"  
+            causality="input"   
+            variability="continuous"    
+            description="Speed of the water current effecting the hull of the ship">
+            <Real start="0.0"    unit="m/s"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputWaterCurrentAngle"   
+            valueReference="9"  
+            causality="input"   
+            variability="continuous"    
+            description="Angle of the water current effecting the hull of the ship">
+            <Real start="0.0"    unit="deg"/>
+        </ScalarVariable>
+
+        <!--
+            InputWaveHeight:
+            
+                    #
+                  #   #
+                #  [0]  #
+              #           #
+             #             #
+             #             #
+             #             #
+             # [1] [2] [3] #
+             #             #
+             #             #
+             #     [4]     #
+             #             #
+             ###############
+        -->
+
+        <ScalarVariable 
+            name="InputWaveHeight[0]"   
+            valueReference="10"  
+            causality="input"   
+            variability="continuous"    
+            description="Front Water Height point of the ship and its distance relative to the wave bellow/above this point">
+            <Real start="0.0"    unit="m"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputWaveHeight[1]"   
+            valueReference="11"  
+            causality="input"   
+            variability="continuous"    
+            description="Left Water Height of the ship and its distance relative to the wave bellow/above this point">
+            <Real start="0.0"    unit="m"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputWaveHeight[2]"   
+            valueReference="12"  
+            causality="input"   
+            variability="continuous"    
+            description="Center Water Height point of the ship and its distance relative to the wave bellow/above this point">
+            <Real start="0.0"    unit="m"/>
+        </ScalarVariable>
+
+
+        <ScalarVariable 
+            name="InputWaveHeight[3]"   
+            valueReference="13"  
+            causality="input"   
+            variability="continuous"    
+            description="Right Water Height point of the ship and its distance relative to the wave bellow/above this point">
+            <Real start="0.0"    unit="m"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputWaveHeight[4]"   
+            valueReference="14"  
+            causality="input"   
+            variability="continuous"    
+            description="Back Water Height point of the ship and its distance relative to the wave bellow/above this point">
+            <Real start="0.0"    unit="m"/>
+        </ScalarVariable>
+
+        <!-- 
+            #==========================================================================#
+            #==============================# Parameters #==============================#
+            #==========================================================================# 
+        -->
+        <ScalarVariable 
+            name="ParameterHullMass"    
+            valueReference="15"  
+            causality="parameter"   
+            variability="tunable"   
+            description="[kg] Total mass of the hull in kg">
+            <Integer start="1000"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="ParameterHullLength"    
+            valueReference="16"  
+            causality="parameter"   
+            variability="tunable"   
+            description="[cm] Lenght of the Hull">
+            <Integer start="300"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="ParameterHullWidth"    
+            valueReference="17"  
+            causality="parameter"   
+            variability="tunable"   
+            description="[cm] Width of the Hull">
+            <Integer start="80"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="ParameterHullHeight"    
+            valueReference="18"  
+            causality="parameter"   
+            variability="tunable"   
+            description="[cm] Height of the Hull">
+            <Integer start="70"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="ParameterThrusterBowPositionX"    
+            valueReference="19"  
+            causality="parameter"   
+            variability="tunable"   
+            description="[cm] The X-axis position of the Thruster located at the fron (ie Bow) of the ship hull relative to the center of the ships hull">
+            <Integer start="130"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="ParameterThrusterPortPositionX"    
+            valueReference="20"  
+            causality="parameter"   
+            variability="tunable"   
+            description="[cm] The X-axis position of the Thruster located at the back Port side of the ship hull relative to the center of the ships hull. Negative values as back of the ship is the negative X-axis">
+            <Integer start="-130"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="ParameterThrusterPortPositionY"    
+            valueReference="21"  
+            causality="parameter"   
+            variability="tunable"   
+            description="[cm] The Y-axis position of the Thruster located at the back Port side of the ship hull relative to the center of the ships hull. Negative values as Port is at the negative side of the Y-axis">
+            <Integer start="-20"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="ParameterThrusterStarboardPositionX"    
+            valueReference="22"  
+            causality="parameter"   
+            variability="tunable"   
+            description="[cm] The X-axis position of the Thruster located at the back Starboard side of the ship hull relative to the center of the ships hull. Negative values as back of the ship is the negative X-axis">
+            <Integer start="-130"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="ParameterThrusterStarboardPositionY"    
+            valueReference="23"  
+            causality="parameter"   
+            variability="tunable"   
+            description="[cm] The Y-axis position of the Thruster located at the back Starboard side of the ship hull relative to the center of the ships hull">
+            <Integer start="20"/>
+        </ScalarVariable>
+
+        <!-- 
+            #=======================================================================#
+            #==============================# Outputs #==============================#
+            #=======================================================================# 
+        -->
+        <ScalarVariable 
+            name="OutputHullPosition[0]"   
+            valueReference="24"  
+            causality="output"   
+            variability="continuous"    
+            description="X-axis linear position of the hull"
+            initial="calculated">
+            <Real unit="m"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputHullPosition[1]"   
+            valueReference="25"  
+            causality="output"   
+            variability="continuous"    
+            description="Y-axis linear position of the hull"
+            initial="calculated">
+            <Real unit="m"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputHullPosition[2]"   
+            valueReference="26"  
+            causality="output"   
+            variability="continuous"    
+            description="Z-axis linear position of the hull"
+            initial="calculated">
+            <Real unit="m"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputHullPosition[3]"   
+            valueReference="27"  
+            causality="output"   
+            variability="continuous"    
+            description="Roll angular position of the hull"
+            initial="calculated">
+            <Real unit="rad"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputHullPosition[4]"   
+            valueReference="28"  
+            causality="output"   
+            variability="continuous"    
+            description="Pitch angular position of the hull"
+            initial="calculated">
+            <Real unit="rad"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputHullPosition[5]"   
+            valueReference="29"  
+            causality="output"   
+            variability="continuous"    
+            description="Yaw angular position of the hull"
+            initial="calculated">
+            <Real unit="rad"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputHullVelocity[0]"   
+            valueReference="30"  
+            causality="output"   
+            variability="continuous"    
+            description="X-axis linear velocity of the hull"
+            initial="calculated">
+            <Real unit="m/s"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputHullVelocity[1]"   
+            valueReference="31"  
+            causality="output"   
+            variability="continuous"    
+            description="Y-axis linear velocity of the hull"
+            initial="calculated">
+            <Real unit="m/s"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputHullVelocity[2]"   
+            valueReference="32"  
+            causality="output"   
+            variability="continuous"    
+            description="Z-axis linear velocity of the hull"
+            initial="calculated">
+            <Real unit="m/s"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputHullVelocity[3]"   
+            valueReference="33"  
+            causality="output"   
+            variability="continuous"    
+            description="Roll angular velocity of the hull"
+            initial="calculated">
+            <Real unit="rad/s"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputHullVelocity[4]"   
+            valueReference="34"  
+            causality="output"   
+            variability="continuous"    
+            description="Pitch angular velocity of the hull"
+            initial="calculated">
+            <Real unit="rad/s"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputHullVelocity[5]"   
+            valueReference="35"  
+            causality="output"   
+            variability="continuous"    
+            description="Yaw angular velocity of the hull"
+            initial="calculated">
+            <Real unit="rad/s"/>
+        </ScalarVariable>
+    </ModelVariables>
+
+    <ModelStructure>
+        <Outputs>
+            <Unknown index="24"/> <!-- OutputHullPosition[0]: X Position -->
+            <Unknown index="25"/> <!-- OutputHullPosition[1]: Y Position -->
+            <Unknown index="26"/> <!-- OutputHullPosition[2]: Z Position -->
+            <Unknown index="27"/> <!-- OutputHullPosition[3]: Roll Position -->
+            <Unknown index="28"/> <!-- OutputHullPosition[4]: Pitch Position -->
+            <Unknown index="29"/> <!-- OutputHullPosition[5]: Yaw Position -->
+
+            <Unknown index="30"/> <!-- OutputHullVelocity[0]: X Linear Velocity -->
+            <Unknown index="31"/> <!-- OutputHullVelocity[1]: Y Linear Velocity -->
+            <Unknown index="32"/> <!-- OutputHullVelocity[2]: Z Linear Velocity -->
+            <Unknown index="33"/> <!-- OutputHullVelocity[3]: Roll Angular Velocity -->
+            <Unknown index="34"/> <!-- OutputHullVelocity[4]: Pitch Angular Velocity -->
+            <Unknown index="35"/> <!-- OutputHullVelocity[5]: Yaw Angular Velocity -->
+        </Outputs>
+    </ModelStructure>
+
+</fmiModelDescription>

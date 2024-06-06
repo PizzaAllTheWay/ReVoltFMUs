@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<fmiModelDescription
+    fmiVersion="2.0"
+    modelName="GNSSFMU"
+    guid="@FMU_UUID@"
+    description="A Global Navigation Satellite System FMU model for ship, Give simulated position and will give out simulated sensor data of ships position, heading and speed. Slow but accurate"
+    author="Martynas Smilingis"
+    version="0.1">
+
+    <CoSimulation
+        modelIdentifier="GNSSFMU"
+        canHandleVariableCommunicationStepSize="true" />
+
+    <UnitDefinitions>
+        <!-- Meter (m) [m] -->
+        <Unit name="m">
+            <BaseUnit m="1"/>
+        </Unit>
+
+        <!-- Radians (rad) [rad] -->
+        <Unit name="rad">
+            <BaseUnit rad="1"/>
+        </Unit>
+
+        <!-- Linear Velocity (m/s) [m * (s**(-1))] -->
+        <Unit name="m/s">
+            <BaseUnit m="1" s="-1"/>
+        </Unit>
+
+        <!-- Angular Velocity (rad/s) [rad * (s**(-1))] -->
+        <Unit name="rad/s">
+            <BaseUnit rad="1" s="-1"/>
+        </Unit>
+    </UnitDefinitions>
+
+    <ModelVariables>
+        <!-- 
+            #======================================================================#
+            #==============================# Inputs #==============================#
+            #======================================================================# 
+        -->
+        <ScalarVariable 
+            name="InputHullPosition[0]"   
+            valueReference="0"  
+            causality="input"   
+            variability="continuous"    
+            description="X-axis linear position of the hull">
+            <Real start="0.0"    unit="m"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputHullPosition[1]"   
+            valueReference="1"  
+            causality="input"   
+            variability="continuous"    
+            description="Y-axis linear position of the hull">
+            <Real start="0.0"    unit="m"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputHullPosition[2]"   
+            valueReference="2"  
+            causality="input"   
+            variability="continuous"    
+            description="Z-axis linear position of the hull">
+            <Real start="0.0"    unit="m"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputHullPosition[3]"   
+            valueReference="3"  
+            causality="input"   
+            variability="continuous"    
+            description="Roll angular position of the hull">
+            <Real start="0.0"    unit="rad"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputHullPosition[4]"   
+            valueReference="4"  
+            causality="input"   
+            variability="continuous"    
+            description="Pitch angular position of the hull">
+            <Real start="0.0"    unit="rad"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputHullPosition[5]"   
+            valueReference="5"  
+            causality="input"   
+            variability="continuous"    
+            description="Yaw angular position of the hull">
+            <Real start="0.0"    unit="rad"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputHullVelocity[0]"   
+            valueReference="6"  
+            causality="input"   
+            variability="continuous"    
+            description="X-axis linear velocity of the hull">
+            <Real start="0.0"    unit="m/s"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputHullVelocity[1]"   
+            valueReference="7"  
+            causality="input"   
+            variability="continuous"    
+            description="Y-axis linear velocity of the hull">
+            <Real start="0.0"    unit="m/s"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputHullVelocity[2]"   
+            valueReference="8"  
+            causality="input"   
+            variability="continuous"    
+            description="Z-axis linear velocity of the hull">
+            <Real start="0.0"    unit="m/s"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputHullVelocity[3]"   
+            valueReference="9"  
+            causality="input"   
+            variability="continuous"    
+            description="Roll angular velocity of the hull">
+            <Real start="0.0"    unit="rad/s"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputHullVelocity[4]"   
+            valueReference="10"  
+            causality="input"   
+            variability="continuous"    
+            description="Pitch angular velocity of the hull">
+            <Real start="0.0"    unit="rad/s"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputHullVelocity[5]"   
+            valueReference="11"  
+            causality="input"   
+            variability="continuous"    
+            description="Yaw angular velocity of the hull">
+            <Real start="0.0"    unit="rad/s"/>
+        </ScalarVariable>
+
+        <!-- 
+            #==========================================================================#
+            #==============================# Parameters #==============================#
+            #==========================================================================# 
+        -->
+        <ScalarVariable 
+            name="ParameterAntennaDistance"    
+            valueReference="12"  
+            causality="parameter"   
+            variability="tunable"   
+            description="[cm] How far away the 2 GNSS Antennas are spaced out on the ship">
+            <Integer start="300"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="ParameterTimeBetweenData"    
+            valueReference="13"  
+            causality="parameter"   
+            variability="tunable"   
+            description="[ms] How much time it takes for each data point to come in">
+            <Integer start="2000"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="ParameterStandardDeviation"    
+            valueReference="14"  
+            causality="parameter"   
+            variability="tunable"   
+            description="[cm] How accurate the GNSS system is">
+            <Integer start="50"/>
+        </ScalarVariable>
+
+        <!-- 
+            #==========================================================================#
+            #==============================# Outputs #==============================#
+            #==========================================================================# 
+        -->
+        <ScalarVariable 
+            name="OutputAntenna1Position[0]"   
+            valueReference="15"  
+            causality="output"   
+            variability="continuous"    
+            description="X-axis position of the Antenna"
+            initial="calculated">
+            <Real unit="m"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputAntenna1Position[1]"   
+            valueReference="16"  
+            causality="output"   
+            variability="continuous"    
+            description="Y-axis position of the Antenna"
+            initial="calculated">
+            <Real unit="m"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputAntenna1Position[2]"   
+            valueReference="17"  
+            causality="output"   
+            variability="continuous"    
+            description="Z-axis position of the Antenna"
+            initial="calculated">
+            <Real unit="m"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputAntenna2Position[0]"   
+            valueReference="18"  
+            causality="output"   
+            variability="continuous"    
+            description="X-axis position of the Antenna"
+            initial="calculated">
+            <Real unit="m"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputAntenna2Position[1]"   
+            valueReference="19"  
+            causality="output"   
+            variability="continuous"    
+            description="Y-axis position of the Antenna"
+            initial="calculated">
+            <Real unit="m"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputAntenna2Position[2]"   
+            valueReference="20"  
+            causality="output"   
+            variability="continuous"    
+            description="Z-axis position of the Antenna"
+            initial="calculated">
+            <Real unit="m"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputVelocitySpeed"   
+            valueReference="21"  
+            causality="output"   
+            variability="continuous"    
+            description="Absolute value of the speed the system is straveling at"
+            initial="calculated">
+            <Real unit="m/s"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputVelocityAngle"   
+            valueReference="22"  
+            causality="output"   
+            variability="continuous"    
+            description="Angle of the speed the system is straveling at"
+            initial="calculated">
+            <Real unit="rad"/>
+        </ScalarVariable>
+    </ModelVariables>
+
+    <ModelStructure>
+        <Outputs>
+            <Unknown index="15"/> <!-- X-axis (OutputAntenna1Position[0]) -->
+            <Unknown index="16"/> <!-- Y-axis (OutputAntenna1Position[1]) -->
+            <Unknown index="17"/> <!-- Z-axis (OutputAntenna1Position[2]) -->
+
+            <Unknown index="18"/> <!-- X-axis (OutputAntenna2Position[0]) -->
+            <Unknown index="19"/> <!-- Y-axis (OutputAntenna2Position[1]) -->
+            <Unknown index="20"/> <!-- Z-axis (OutputAntenna2Position[2]) -->
+
+            <Unknown index="21"/> <!-- Absolute speed value (OutputVelocitySpeed) -->
+            <Unknown index="22"/> <!-- Angle of the speed (OutputVelocityAngle) -->
+        </Outputs>
+    </ModelStructure>
+
+</fmiModelDescription>

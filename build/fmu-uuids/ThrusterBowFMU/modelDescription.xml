@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<fmiModelDescription
+    fmiVersion="2.0"
+    modelName="ThrusterBowFMU"
+    guid="19cda3a9-06f4-5026-bcfb-915fb88ebbaa"
+    description="An dynamics FMU model for bow thruster, you give it a certain force and angle, and it calculates the actual force and angle thrusters give out"
+    author="Martynas Smilingis"
+    version="0.1">
+
+    <CoSimulation
+        modelIdentifier="ThrusterBowFMU"
+        canHandleVariableCommunicationStepSize="true" />
+
+    <UnitDefinitions>
+        <!-- Newton (N) [kg * m * (s**(-2))] -->
+        <Unit name="N">
+            <BaseUnit kg="1" m="1" s="-2"/>
+        </Unit>
+
+        <!-- Degrees (deg) [* (factor of 0.0174533 is convertion rate between rad and deg)] -->
+        <Unit name="deg">
+            <BaseUnit rad="1"/>
+            <DisplayUnit name="deg" factor="0.0174533"/>
+        </Unit>
+    </UnitDefinitions>
+
+    <ModelVariables>
+        <!-- Inputs -->
+        <ScalarVariable 
+            name="InputForce"   
+            valueReference="0"  
+            causality="input"   
+            variability="continuous"    
+            description="Force thruster should output">
+            <Real start="0.0"    unit="N"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="InputAngle"   
+            valueReference="1"  
+            causality="input"   
+            variability="continuous"    
+            description="Angle thruster should be at">
+            <Real start="0.0"    unit="deg"/>
+        </ScalarVariable>
+
+        <!-- Parameters -->
+        <ScalarVariable 
+            name="ParameterThrusterEfficiency"    
+            valueReference="2"  
+            causality="parameter"   
+            variability="tunable"   
+            description="Percentage (%) for how well thrusters convert given thrust into usable thrust, can NOT exeed 100%">
+            <Integer start="70"/>
+        </ScalarVariable>
+
+        <!-- Outputs -->
+        <ScalarVariable 
+            name="OutputForce"   
+            valueReference="3"  
+            causality="output"   
+            variability="continuous"    
+            description="Force thruster give output"
+            initial="calculated">
+            <Real unit="N"/>
+        </ScalarVariable>
+
+        <ScalarVariable 
+            name="OutputAngle"   
+            valueReference="4"  
+            causality="output"   
+            variability="continuous"    
+            description="Angle thruster are at"
+            initial="calculated">
+            <Real unit="deg"/>
+        </ScalarVariable>
+    </ModelVariables>
+
+    <ModelStructure>
+        <Outputs>
+            <Unknown index="3"/> <!-- OutputForce -->
+            <Unknown index="4"/> <!-- OutputAngle -->
+        </Outputs>
+    </ModelStructure>
+
+</fmiModelDescription>
