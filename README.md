@@ -5,6 +5,9 @@ Compiles cpp models of ReVolt Vessel to FMU
 - GNSS Model
 - IMU Model
 
+# Example
+https://github.com/PizzaAllTheWay/ReVoltFMUs/assets/42731091/6a74ad7f-a5d1-4589-8598-5f8fa1f8295d
+
 ## Note
 I tried my best to represent the ReVolt vessel in simulations, however its in no way perfect, far from it. Its a simplified model of the physical vessel. However it is good enough for most things that require low to medium fidelity of ship dynamics.
 
