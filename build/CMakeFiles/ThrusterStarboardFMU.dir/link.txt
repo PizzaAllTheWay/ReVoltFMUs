@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -shared  -o ThrusterStarboardFMU.so CMakeFiles/ThrusterStarboardFMU.dir/src/ThrusterStarboardFMU/sources/fmu.cpp.o CMakeFiles/ThrusterStarboardFMU.dir/src/ThrusterStarboardFMU/libraries/thrusterStarboardModel.cpp.o CMakeFiles/ThrusterStarboardFMU.dir/cppfmu/cppfmu_cs.cpp.o CMakeFiles/ThrusterStarboardFMU.dir/cppfmu/fmi_functions.cpp.o 

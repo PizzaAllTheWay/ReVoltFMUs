@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -shared  -o ThrusterBowFMU.so CMakeFiles/ThrusterBowFMU.dir/src/ThrusterBowFMU/sources/fmu.cpp.o CMakeFiles/ThrusterBowFMU.dir/src/ThrusterBowFMU/libraries/thrusterBowModel.cpp.o CMakeFiles/ThrusterBowFMU.dir/cppfmu/cppfmu_cs.cpp.o CMakeFiles/ThrusterBowFMU.dir/cppfmu/fmi_functions.cpp.o 
